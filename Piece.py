@@ -16,6 +16,7 @@ class Piece:
         self.row_number = row_number
         self.col_number = col_number
         self._player = player
+        self._age = 0   # added
 
     # Get the x value
     def get_row_number(self):
@@ -56,6 +57,14 @@ class Piece:
     # Get moves
     def get_valid_piece_moves(self, board):
         pass
+
+    # added
+    def increment_age(self):
+        self._age += 1
+
+    # added
+    def get_age(self):
+        return self._age
 
 
 # Rook (R)

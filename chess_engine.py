@@ -5,7 +5,7 @@
 # Note: move log class inspired by Eddie Sharick
 #
 import logging  # added
-from Piece import Rook, Knight, Bishop, Queen, King, Pawn
+from Piece import Rook, Knight, Bishop, Queen, King, Pawn, Piece
 from enums import Player
 
 # added
@@ -51,6 +51,8 @@ class game_state:
         self.white_king_can_castle = [True, True,
                                       True]  # Has king not moved, has Rook1(col=0) not moved, has Rook2(col=7) not moved
         self.black_king_can_castle = [True, True, True]
+
+        self.knights_moves_count = 0    # added
 
         # Initialize White pieces
         white_rook_1 = Rook('r', 0, 0, Player.PLAYER_1)
@@ -114,6 +116,8 @@ class game_state:
             [black_rook_1, black_knight_1, black_bishop_1, black_king, black_queen, black_bishop_2, black_knight_2,
              black_rook_2]
         ]
+
+        self.checking_counter = 0               # added
 
     def get_piece(self, row, col):
         if (0 <= row < 8) and (0 <= col < 8):
@@ -333,6 +337,14 @@ class game_state:
 
             if ending_square in valid_moves:
                 moved_to_piece = self.get_piece(next_square_row, next_square_col)
+
+                for row in self.board:  # added
+                    for piece in row:  # added
+                        if isinstance(piece,Piece):  # added
+                            piece.increment_age()  # added
+
+                if moving_piece.get_name() is "n":  # added
+                    self.knights_moves_count += 1   # added
                 if moving_piece.get_name() is "k":
                     if moving_piece.is_player(Player.PLAYER_1):
                         if moved_to_piece == Player.EMPTY and next_square_col == 1 and self.king_can_castle_left(

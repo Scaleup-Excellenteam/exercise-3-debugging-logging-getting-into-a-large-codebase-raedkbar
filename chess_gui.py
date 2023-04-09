@@ -172,6 +172,8 @@ def main():
                         valid_moves = game_state.get_valid_moves((row, col))
                         if valid_moves is None:
                             valid_moves = []
+
+
             elif e.type == py.KEYDOWN:
                 if e.key == py.K_r:
                     game_over = False
@@ -186,18 +188,45 @@ def main():
 
         draw_game_state(screen, game_state, valid_moves, square_selected)
 
-        endgame = game_state.checkmate_stalemate_checker()
+        if not game_over:   # added to prevent repeated file logs
+            # moved inside the if statement to prevent repeated print console logs
+            endgame = game_state.checkmate_stalemate_checker()
+            if endgame == 0:
+                game_over = True
+                logging.info("Black wins.")     # added
+                logging.info(f"Knights moves in total: {game_state.knights_moves_count}")   # added
+                logging.info(
+                    f"total turns survived (white): {sum([piece.get_age() for piece in game_state.white_pieces])}")
+                logging.info(
+                    f"total turns survived (black): {sum([piece.get_age() for piece in game_state.black_pieces])}")
+                logging.info(f"total checking moves : {game_state.checking_counter}")  # added
+
+            elif endgame == 1:
+                game_over = True
+                logging.info("White wins.")     # added
+                logging.info(f"Knights moves in total: {game_state.knights_moves_count}")  # added
+                logging.info(
+                    f"total turns survived (white): {sum([piece.get_age() for piece in game_state.white_pieces])}")
+                logging.info(
+                    f"total turns survived (black): {sum([piece.get_age() for piece in game_state.black_pieces])}")
+                logging.info(f"total checking moves : {game_state.checking_counter}")  # added
+
+            elif endgame == 2:
+                game_over = True
+                logging.info("Stalemate.")      # added
+                logging.info(f"Knights moves in total: {game_state.knights_moves_count}")  # added
+                logging.info(
+                    f"total turns survived (white): {sum([piece.get_age() for piece in game_state.white_pieces])}")
+                logging.info(
+                    f"total turns survived (white): {sum([piece.get_age() for piece in game_state.black_pieces])}")
+                logging.info(f"total checking moves : {game_state.checking_counter}")  # added
+
+        # moved this block outside, so it can keep looping
         if endgame == 0:
-            game_over = True
-            logging.info("Black wins.")     # added
             draw_text(screen, "Black wins.")
         elif endgame == 1:
-            game_over = True
-            logging.info("White wins.")     # added
             draw_text(screen, "White wins.")
         elif endgame == 2:
-            game_over = True
-            logging.info("Stalemate.")      # added
             draw_text(screen, "Stalemate.")
 
         clock.tick(MAX_FPS)
