@@ -53,6 +53,7 @@ class game_state:
         self.black_king_can_castle = [True, True, True]
 
         self.knights_moves_count = 0    # added
+        self.pieces_on_board = 0        # added
 
         # Initialize White pieces
         white_rook_1 = Rook('r', 0, 0, Player.PLAYER_1)
@@ -338,9 +339,14 @@ class game_state:
             if ending_square in valid_moves:
                 moved_to_piece = self.get_piece(next_square_row, next_square_col)
 
+                self.pieces_on_board = 0
+
                 for row in self.board:  # added
                     for piece in row:  # added
                         if isinstance(piece,Piece):  # added
+                            print(type(piece).__name__)
+                            self.pieces_on_board +=1
+
                             piece.increment_age()  # added
 
                 if moving_piece.get_name() is "n":  # added
@@ -483,6 +489,8 @@ class game_state:
 
                 self.white_turn = not self.white_turn
 
+                if self._is_check:
+                    self.checking_counter += 1        # added
             else:
                 pass
 
@@ -871,7 +879,7 @@ class game_state:
                     # self._is_check = True
                     _checks.append((king_location_row + row_change[i], king_location_col + col_change[i]))
         # print([_checks, _pins, _pins_check])
-        return [_checks, _pins, _pins_check]    # fixed. return [_pins_check, _pins, _pins_check]
+        return [_checks, _pins, _pins_check]    # added. fixed return [_pins_check, _pins, _pins_check]
 
 
 class chess_move():
