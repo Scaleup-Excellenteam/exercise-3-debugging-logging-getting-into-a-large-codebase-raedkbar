@@ -6,6 +6,7 @@
 # Note: Code inspired from the pseudocode by Sebastian Lague
 # from enums import Player
 # TODO: switch undo moves to stack data structure
+import logging     # added
 import chess_engine
 from enums import Player
 
@@ -141,7 +142,7 @@ class chess_ai:
 
     def get_piece_value(self, piece, player):
         if player is Player.PLAYER_1:
-            if piece.is_player("black"):
+            if piece.is_player("white"):    # fixed. if piece.is_player("black"):
                 if piece.get_name() is "k":
                     return -1000
                 elif piece.get_name() is "q":
